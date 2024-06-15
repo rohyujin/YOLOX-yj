@@ -1,0 +1,4 @@
+python tools/train.py -f exps/example/custom/yolox_x_smart.py -d 1 -b 8 -o
+python tools/train.py -f exps/example/custom/yolox_x_smart_240501_v2.py -d 1 -b 8 -o
+python tools/demo.py image -f exps/example/custom/yolox_x_smart.py -c ./YOLOX_outputs/yolox_x_smart/best_ckpt.pth --path ../datasets/mkdir/image/video1 --conf 0.5 --nms 0.45 --tsize 640 --save_result --device cpu
+python tools/demo_smart.py image -f exps/example/custom/yolox_x_smart.py -c ./YOLOX_outputs/yolox_x_smart/best_ckpt.pth --path ../datasets/mkdir/image/video1 --conf 0.5 --nms 0.45 --tsize 640 --save_result --device cpu --th 180
