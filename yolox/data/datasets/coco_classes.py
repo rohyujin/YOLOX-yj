@@ -3,8 +3,9 @@
 # Copyright (c) Megvii, Inc. and its affiliates.
 
 COCO_CLASSES = (
-    "Star",
-    "Truck",
+    "space",
+    "freight",
+    "OOD",
 )
 
 # COCO_CLASSES = (

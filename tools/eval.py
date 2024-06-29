@@ -23,7 +23,6 @@ from yolox.utils import (
     setup_logger
 )
 
-
 def make_parser():
     parser = argparse.ArgumentParser("YOLOX Eval")
     parser.add_argument("-expn", "--experiment-name", type=str, default=None)
@@ -57,7 +56,7 @@ def make_parser():
         help="please input your experiment description file",
     )
     parser.add_argument("-c", "--ckpt", default=None, type=str, help="ckpt for eval")
-    parser.add_argument("--conf", default=None, type=float, help="test conf")
+    parser.add_argument("--conf", default=0.001, type=float, help="test conf") #"--conf", default=None, type=float, help="test conf"
     parser.add_argument("--nms", default=None, type=float, help="test nms threshold")
     parser.add_argument("--tsize", default=None, type=int, help="test img size")
     parser.add_argument("--seed", default=None, type=int, help="eval seed")

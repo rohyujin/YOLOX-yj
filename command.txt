@@ -1,4 +1,17 @@
 python tools/train.py -f exps/example/custom/yolox_x_smart.py -d 1 -b 8 -o
 python tools/train.py -f exps/example/custom/yolox_x_smart_240501_v2.py -d 1 -b 8 -o
+
+#train
+python tools/train.py -f exps/example/custom/yolox_x_thesis.py -d 1 -b 4 -o
+
 python tools/demo.py image -f exps/example/custom/yolox_x_smart.py -c ./YOLOX_outputs/yolox_x_smart/best_ckpt.pth --path ../datasets/mkdir/image/video1 --conf 0.5 --nms 0.45 --tsize 640 --save_result --device cpu
 python tools/demo_smart.py image -f exps/example/custom/yolox_x_smart.py -c ./YOLOX_outputs/yolox_x_smart/best_ckpt.pth --path ../datasets/mkdir/image/video1 --conf 0.5 --nms 0.45 --tsize 640 --save_result --device cpu --th 180
+python tools/demo.py image -f exps/example/custom/yolox_x_thesis.py -c ./YOLOX_outputs/yolox_x_thesis/best_ckpt.pth --path ../datasets/thesis_dataset/test --conf 0.1 --nms 0.45 --tsize 640 --save_result --device gpu
+
+#demo
+python tools/demo.py image -f exps/example/custom/yolox_x_thesis.py -c ./YOLOX_outputs/yolox_x_thesis/best_ckpt.pth --path datasets/thesis_dataset/test --conf 0.1 --nms 0.45 --tsize 640 --save_result --device gpu
+
+
+
+#test
+python -m yolox.tools.eval -f exps/example/custom/yolox_x_thesis.py -c ./YOLOX_outputs/yolox_x_thesis/best_ckpt.pth -b 64 -d 8 --conf 0.001

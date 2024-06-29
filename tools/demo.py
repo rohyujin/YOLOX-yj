@@ -83,6 +83,17 @@ def make_parser():
         action="store_true",
         help="Using TensorRT model for testing.",
     )
+    parser.add_argument(
+        '--palette_threshold',
+        default=None,
+        type=float
+    )
+    parser.add_argument(
+        '--ood_threshold',
+        default=None,
+        type=float
+
+    )
     return parser
 
 
@@ -167,7 +178,7 @@ class Predictor(object):
             logger.info("Infer time: {:.4f}s".format(time.time() - t0))
         return outputs, img_info
 
-    def visual(self, output, img_info, cls_conf=0.35):
+    def visual(self, output, img_info, cls_conf=0.35, palette_threshold=None, ood_threshold=None):
         ratio = img_info["ratio"]
         img = img_info["raw_img"]
         if output is None:
@@ -181,12 +192,21 @@ class Predictor(object):
 
         cls = output[:, 6]
         scores = output[:, 4] * output[:, 5]
+        # import pdb
+        # pdb.set_trace()
 
-        vis_res = vis(img, bboxes, scores, cls, cls_conf, self.cls_names)
+        #수정ood
+        # Filter out objects with class confidence < 0.8
+        # filtered_indices = scores > 0.8
+        # bboxes = bboxes[filtered_indices]
+        # cls = cls[filtered_indices]
+        # scores = scores[filtered_indices]
+
+        vis_res = vis(img, bboxes, scores, cls, cls_conf, self.cls_names, palette_threshold, ood_threshold)
         return vis_res
 
 
-def image_demo(predictor, vis_folder, path, current_time, save_result):
+def image_demo(predictor, vis_folder, path, current_time, save_result, palette_threshold=None, ood_threshold=None):
     if os.path.isdir(path):
         files = get_image_list(path)
     else:
@@ -195,7 +215,7 @@ def image_demo(predictor, vis_folder, path, current_time, save_result):
     for image_name in files:
         outputs, img_info = predictor.inference(image_name)
         # outputs = [x,y,x,y]
-        result_image = predictor.visual(outputs[0], img_info, predictor.confthre)
+        result_image = predictor.visual(outputs[0], img_info, predictor.confthre, palette_threshold=palette_threshold, ood_threshold=ood_threshold)
         if save_result:
             save_folder = os.path.join(
                 vis_folder, time.strftime("%Y_%m_%d_%H_%M_%S", current_time)
@@ -311,7 +331,7 @@ def main(exp, args):
     )
     current_time = time.localtime()
     if args.demo == "image":
-        image_demo(predictor, vis_folder, args.path, current_time, args.save_result)
+        image_demo(predictor, vis_folder, args.path, current_time, args.save_result, args.palette_threshold, args.ood_threshold)
     elif args.demo == "video" or args.demo == "webcam":
         imageflow_demo(predictor, vis_folder, current_time, args)
 

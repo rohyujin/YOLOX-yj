@@ -8,7 +8,7 @@ import numpy as np
 __all__ = ["vis"]
 
 
-def vis(img, boxes, scores, cls_ids, conf=0.5, class_names=None, palette_threshold=None):
+def vis(img, boxes, scores, cls_ids, conf=0.5, class_names=None, palette_threshold=None, ood_threshold=None):
     message = None
     font = cv2.FONT_HERSHEY_SIMPLEX
 
@@ -28,6 +28,10 @@ def vis(img, boxes, scores, cls_ids, conf=0.5, class_names=None, palette_thresho
                 message = "Fail"
             else:
                 message = "Pass"
+
+        if ood_threshold is not None:
+            if cls_id == 0 and score < ood_threshold:
+                cls_id = 2
 
         color = (_COLORS[cls_id] * 255).astype(np.uint8).tolist()
         text = '{}:{:.1f}%'.format(class_names[cls_id], score * 100)

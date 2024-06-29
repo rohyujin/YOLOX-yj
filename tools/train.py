@@ -14,6 +14,28 @@ from yolox.core import launch
 from yolox.exp import Exp, check_exp_value, get_exp
 from yolox.utils import configure_module, configure_nccl, configure_omp, get_num_devices
 
+import os
+import time
+
+waiting_list = ['─', '＼', '│', '/']
+target_datapath = 'datasets/thesis_dataset/'
+train_json = 'train.json'
+val_json = 'val.json'
+
+train_json_filepath = os.path.join(target_datapath, "annotations", train_json)
+val_json_filepath = os.path.join(target_datapath, "annotations", val_json)
+idx = 0
+while True:
+    if os.path.isfile(train_json_filepath) and os.path.isfile(val_json_filepath):
+        print('\nAfter a while, the training code will be executed.\n')
+        time.sleep(5)
+        break
+    else:
+        time.sleep(0.25)
+        print('Waiting for json file to be created... %s ' % (waiting_list[idx % 4]), end='\r')
+        idx += 1
+
+print('Start training...')
 
 def make_parser():
     parser = argparse.ArgumentParser("YOLOX train parser")
@@ -57,6 +79,9 @@ def make_parser():
     )
     parser.add_argument(
         "--machine_rank", default=0, type=int, help="node rank for multi-node training"
+    )
+    parser.add_argument(
+        "--conf", default=0.001, type=float, help="test conf"
     )
     parser.add_argument(
         "--fp16",
